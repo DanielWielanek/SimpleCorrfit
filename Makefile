@@ -6,7 +6,7 @@ FF    = gfortran
 COPTS    = -g -O  `root-config --cflags` -Wall -g
 LDOPTS    = -g -O  `root-config --libs` -lstdc++ -Wall -g
 #C++ Files
-SOURCES =  Main.cpp Pair.cpp StandAloneFsiLednicky.cpp StandAloneSimpleFsi.cpp
+SOURCES =  Main.cpp Pair.cpp StandAloneFsiLednicky.cpp StandAloneSimpleFsi.cpp Histogram1D.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 #FORTRAN Files
 FSOURCES= FsiTools.F FsiWeightLednicky4.F

@@ -6,6 +6,7 @@
  *		E-mail: daniel.wielanek@gmail.com
  *		Warsaw University of Technology, Faculty of Physics
  */
+#include "Histogram1D.h"
 #include "StandAloneFsiLednicky.h"
 #include "StandAloneSimpleFsi.h"
 #include "TRandom.h"
@@ -13,10 +14,16 @@
 #include <TH1D.h>
 #include <TLorentzVector.h>
 #include <iostream>
+
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <random>
+#include <string>
+
 using namespace std;
 
-const double gFmToGeVToFm = 5.067731036;
-const double gFmToGeV     = 0.197326968;
 
 FourVector GetMom(double mass) {
   FourVector l;
@@ -29,14 +36,17 @@ FourVector GetMom(double mass) {
 }
 
 void GetPos(double* p) {
-  p[0] = gRandom->Gaus(0, 1);
-  p[1] = gRandom->Gaus(0, 1);
-  p[2] = gRandom->Gaus(0, 1);
-  p[3] = 0;  // gRandom->Gaus(0, 1);
+  const Double_t R = 4.0;
+  p[0]             = gRandom->Gaus(0, R);
+  p[1]             = gRandom->Gaus(0, R);
+  p[2]             = gRandom->Gaus(0, R);
+  p[3]             = 0;  // gRandom->Gaus(0, 1);
 }
 
 
 void Boost(Pair* p) {
+  const double gFmToGeVToFm = 5.067731036;
+  const double gFmToGeV     = 0.197326968;
 
   double tPx = p->p1().x + p->p2().x;
   double tPy = p->p1().y + p->p2().y;
@@ -80,10 +90,21 @@ void Boost(Pair* p) {
   p->mPos.part1.t = tDt * gFmToGeV;
 }
 
-TFile* sOutFile;
+TH1D* GetRootHist(TString name, const Histogram1D& h) {
+  TH1D* res = new TH1D(name, name, h.GetNBins(), h.GetMin(), h.GetMax());
+  for (int i = 0; i < h.GetNBins(); i++) {
+    res->SetBinContent(i + 1, h.GetBinContent(i));
+  }
+  return res;
+}
 
 
 int main(int argc, char** argv) {
+  /** for random **/
+  std::random_device rd {};
+  std::mt19937 gen {rd()};
+  std::normal_distribution<double> d {0, 0.5};
+  /**end to random **/
 
 
   TString systemName = "";
@@ -111,14 +132,16 @@ int main(int argc, char** argv) {
 
   Pair* pair = new Pair();
 
-  TH1D* numL = new TH1D("numL", "numL", 100, 0, 1);
-  TH1D* denL = new TH1D("denL", "denL", 100, 0, 1);
-  TH1D* numK = new TH1D("numK", "numK", 100, 0, 1);
-  TH1D* denK = new TH1D("denK", "denK", 100, 0, 1);
-  TH1D* dif  = new TH1D("dif", "dif", 100, -0.1, 0.1);
+  TH1D* numL         = new TH1D("numL", "numL", 100, 0, 1);
+  TH1D* denL         = new TH1D("denL", "denL", 100, 0, 1);
+  TH1D* numK         = new TH1D("numK", "numK", 100, 0, 1);
+  TH1D* denK         = new TH1D("denK", "denK", 100, 0, 1);
+  TH1D* dif          = new TH1D("dif", "dif", 100, -0.1, 0.1);
+  Histogram1D* numLH = new Histogram1D(0, 1);
+  Histogram1D* denLH = new Histogram1D(0, 1);
 
   double poz1[4], poz2[4];
-  Int_t pairs  = 100000;
+  Int_t pairs  = 1000000;
   Int_t kPairs = pairs / 1000;
   for (int i = 0; i < pairs; i++) {
     if (i % 1000 == 0) {
@@ -149,7 +172,7 @@ int main(int argc, char** argv) {
 
 
     double wK = tWeightKisiel->getWeight(*pair);
-    double wL = tWeightLed->getWeight(*pair);
+    double wL = 0;  // tWeightLed->getWeight(*pair);
 
 
     double kstar = tWeightKisiel->getKStarSigned();
@@ -158,12 +181,14 @@ int main(int argc, char** argv) {
     // cout << "REQ" << endl;
     // cout << poz1[0] << " " << poz1[1] << " " << poz1[2] << " " << poz1[3] << endl;
     // cout << tWeightKisiel->GetRout() << " " << tWeightKisiel->GetRside() << " " << tWeightKisiel->GetRlong() << endl;
-    if (fabs((wK - wL) * 100.) > 0.01) cout << wK << " " << wL << "----------- " << kstar << endl;
+    // if (fabs((wK - wL) * 100.) > 0.01) cout << wK << " " << wL << "----------- " << kstar << endl;
 
     dif->Fill(100.0 * (wK - wL) / wK);
 
     numL->Fill(kstar, wL);
     numK->Fill(kstar, wK);
+    numLH->Fill(kstar, wL);
+    denLH->Fill(kstar, 1);
     denL->Fill(kstar);
     denK->Fill(kstar);
   }
@@ -174,6 +199,16 @@ int main(int argc, char** argv) {
   numL->Write();
   numK->Divide(denK);
   numK->Write();
+
+  TH1D* nc = new TH1D("checkNum", "checkNum", 100, 0, 1);
+  TH1D* dc = new TH1D("checkDen", "checkDen", 100, 0, 1);
+  for (int i = 0; i < 100; i++) {
+    nc->SetBinContent(i + 1, numLH->GetBinContent(i));
+    dc->SetBinContent(i + 1, denLH->GetBinContent(i));
+  }
+  nc->Write();
+  dc->Write();
+
   dif->Write();
   fx->Close();
 
