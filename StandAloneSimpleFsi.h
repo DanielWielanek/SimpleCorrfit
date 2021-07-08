@@ -44,14 +44,8 @@ typedef struct _dcomplex dcomplex;
 
 class StandAloneSimpleFsi {
 
-  double mKStarLong, mKStarOut, mKStarSide, mKStarSigned, mBetat;
-  double pairphi;
-
-  double deta, dphi;
-
+  double mKStarLong, mKStarOut, mKStarSide, mKStarSigned;
   double mROS, mRSS, mRLS, mRSt;
-  double mKT;
-  double ktmin, ktmax;
 
   int pairtype;
   int partpid;
@@ -95,17 +89,8 @@ public:
   // int IsResidualPair(int,int,int,int);
   int IsIdentical(int) { return 0; };
   double getKStarSigned() { return mKStarSigned; }
-  void setQuantumOn() {};
-  void setStrongOff() {};
-  void setCoulOn() {};
   double getWeight(Pair& aPair);
-  void setDefaultCalcPar() {};
-  void setStrongOn() {};
   void setPairType(int aPairType);
-  void setQuantumOff() {};
-  void set3BodyOn() {};
-  void setCoulOff() {};
-  void set3BodyOff() {};
   int getPairType();
   inline double GetRout() const { return mROS * 0.197326968; };
   inline double GetRside() const { return mRSS * 0.197326968; };

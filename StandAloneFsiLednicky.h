@@ -152,6 +152,8 @@ private:
   int mNs;
   double mNuclMass;
   double mNuclCharge;
+  double mP1[4], mP2[4];
+  double mX1[4], mX2[4];
   short mNuclChargeSign;
 
 protected:
@@ -297,9 +299,28 @@ inline void StandAloneFsiLednicky::setPimProton() {
 }
 
 inline double StandAloneFsiLednicky::getWeight(Pair& aPair) {
-  aPair.SetPosMom();
-  fsimomentum(*Pair::mom1, *Pair::mom2);
-  fsiposition(*Pair::pos1, *Pair::pos2);
+  mP1[0] = aPair.mMom.part1.x;
+  mP1[1] = aPair.mMom.part1.y;
+  mP1[2] = aPair.mMom.part1.z;
+  mP1[3] = aPair.mMom.part1.t;
+
+  mP2[0] = aPair.mMom.part2.x;
+  mP2[1] = aPair.mMom.part2.y;
+  mP2[2] = aPair.mMom.part2.z;
+  mP2[3] = aPair.mMom.part2.t;
+
+  mX1[0] = aPair.mPos.part1.x;
+  mX1[1] = aPair.mPos.part1.y;
+  mX1[2] = aPair.mPos.part1.z;
+  mX1[3] = aPair.mPos.part1.t;
+
+  mX2[0] = aPair.mPos.part2.x;
+  mX2[1] = aPair.mPos.part2.y;
+  mX2[2] = aPair.mPos.part2.z;
+  mX2[3] = aPair.mPos.part2.t;
+
+  fsimomentum(*mP1, *mP2);
+  fsiposition(*mX1, *mX2);
   ltran12();
   fsiw(1, mWeif, mWei, mWein);
   // if (mI3c==0) return mWein;

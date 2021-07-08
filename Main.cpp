@@ -107,9 +107,6 @@ int main(int argc, char** argv) {
   tWeightLed->set3BodyOff();
   tWeightLed->setPairType(theChosenOne);  // oposite
 
-  tWeightKisiel->setCoulOn();
-  tWeightKisiel->setQuantumOff();
-  tWeightKisiel->setStrongOff();
   tWeightKisiel->setPairType(theChosenOne);
 
   Pair* pair = new Pair();
@@ -118,6 +115,7 @@ int main(int argc, char** argv) {
   TH1D* denL = new TH1D("denL", "denL", 100, 0, 1);
   TH1D* numK = new TH1D("numK", "numK", 100, 0, 1);
   TH1D* denK = new TH1D("denK", "denK", 100, 0, 1);
+  TH1D* dif  = new TH1D("dif", "dif", 100, -0.1, 0.1);
 
   double poz1[4], poz2[4];
   Int_t pairs  = 100000;
@@ -156,10 +154,13 @@ int main(int argc, char** argv) {
 
     double kstar = tWeightKisiel->getKStarSigned();
 
+
     // cout << "REQ" << endl;
     // cout << poz1[0] << " " << poz1[1] << " " << poz1[2] << " " << poz1[3] << endl;
     // cout << tWeightKisiel->GetRout() << " " << tWeightKisiel->GetRside() << " " << tWeightKisiel->GetRlong() << endl;
-    // cout << wK << " " << wL << "----------- " << kstar << endl;
+    if (fabs((wK - wL) * 100.) > 0.01) cout << wK << " " << wL << "----------- " << kstar << endl;
+
+    dif->Fill(100.0 * (wK - wL) / wK);
 
     numL->Fill(kstar, wL);
     numK->Fill(kstar, wK);
@@ -173,6 +174,7 @@ int main(int argc, char** argv) {
   numL->Write();
   numK->Divide(denK);
   numK->Write();
+  dif->Write();
   fx->Close();
 
   return 0;

@@ -188,11 +188,11 @@ void StandAloneSimpleFsi::InitializeGamow() {
 }
 
 double StandAloneSimpleFsi::getWeight(Pair& aPair) {
+  aPair.CalculateKinematics();
   Kinematics(aPair);
   InitializeGamow();
   return GetCoulomb();
 }
-
 
 void StandAloneSimpleFsi::setPairType(int aPairType) {
   if (aPairType == 11) {  // pi+K+
@@ -213,89 +213,14 @@ void StandAloneSimpleFsi::setPairType(int aPairType) {
 int StandAloneSimpleFsi::getPairType() { return pairtype; }
 
 void StandAloneSimpleFsi::Kinematics(Pair& aPair) {
-  double p1x = aPair.p1().x;
-  double p1y = aPair.p1().y;
-  double p1z = aPair.p1().z;
-  double p1e = aPair.p1().t;
-
-
-  double p2x = aPair.p2().x;
-  double p2y = aPair.p2().y;
-  double p2z = aPair.p2().z;
-  double p2e = aPair.p2().t;
-
-  double tPx = p1x + p2x;
-  double tPy = p1y + p2y;
-  double tPz = p1z + p2z;
-  double tE  = p1e + p2e;
-  double tPt = tPx * tPx + tPy * tPy;
-  double tMt = tE * tE - tPz * tPz;  // mCVK;
-  double tM  = sqrt(tMt - tPt);
-  tMt        = sqrt(tMt);
-  tPt        = sqrt(tPt);
-
-  mKT     = tPt / 2.0;
-  pairphi = TMath::ATan2(tPy, tPx);
-
-  //  if ((mKT < ktmin) || (mKT > ktmax)) return 0;
-
-  mBetat = tPt / tMt;
-
-  // Boost to LCMS
-  double tBeta  = tPz / tE;
-  double tGamma = tE / tMt;
-  mKStarLong    = tGamma * (p1z - tBeta * p1e);
-  double tE1Lm  = tGamma * (p1e - tBeta * p1z);
-
-
-  // Rotate in transverse plane
-  mKStarOut  = (p1x * tPx + p1y * tPy) / tPt;
-  mKStarSide = (-p1x * tPy + p1y * tPx) / tPt;
-
-  // Boost to pair cms
-  mKStarOut = tMt / tM * (mKStarOut - tPt / tMt * tE1Lm);
-
-
-  Double_t tGammat = 1.0 / TMath::Sqrt(1.0 - mBetat * mBetat);
-
-
-  // mKO = particle1lcmsm.fpx - particle2lcmsm.fpx;
-
-  mKStarSigned = mKStarOut > 0. ? 1. : -1.;
-  mKStarSigned *= sqrt(mKStarSide * mKStarSide + mKStarOut * mKStarOut + mKStarLong * mKStarLong);
-
-  const double mFmToGeV = 0.197326968;
-
-
-  double tDX    = aPair.x1().x - aPair.x2().x;
-  double tDY    = aPair.x1().y - aPair.x2().y;
-  double tRLong = aPair.x1().z - aPair.x2().z;
-  double tDTime = aPair.x1().t - aPair.x2().t;
-
-  /* double tDX    = aPair.pos1[0] - aPair.pos2[0];
-   double tDY    = aPair.pos1[1] - aPair.pos2[1];
-   double tRLong = aPair.pos1[2] - aPair.pos2[2];
-   double tDTime = aPair.pos1[3] - aPair.pos2[3];
- */
-  double tROut         = (tDX * tPx + tDY * tPy) / tPt;
-  double tRSide        = (-tDX * tPy + tDY * tPx) / tPt;
-  double tRSidePairCMS = tRSide;
-  mRSS                 = tRSidePairCMS / mFmToGeV;
-
-  double tRLongPairCMS  = tGamma * (tRLong - tBeta * tDTime);
-  mRLS                  = tRLongPairCMS / mFmToGeV;
-  double tDTimePairLCMS = tGamma * (tDTime - tBeta * tRLong);
-
-  tBeta                = tPt / tMt;
-  tGamma               = tMt / tM;
-  double tROutPairCMS  = tGamma * (tROut - tBeta * tDTimePairLCMS);
-  mROS                 = tROutPairCMS / mFmToGeV;
-  double tDTimePairCMS = tGamma * (tDTimePairLCMS - tBeta * tROut);
-  // mRTS                 = tDTimePairCMS / mFmToGeV;
-  double tRStar = ::sqrt(tROutPairCMS * tROutPairCMS + tRSidePairCMS * tRSidePairCMS + tRLongPairCMS * tRLongPairCMS);
-  mRSt          = tRStar / mFmToGeV;
-  // std::cout << "KSTARS" << mKStarOut << " " << mKStarSide << " " << mKStarLong << std::endl;  // t jest ok
-  //  std::cout << "RSTARS" << mRSS << " " << mROS << " " << mRLS << " " << mRSt << std::endl;
+  mKStarOut    = aPair.GetKStarOut();
+  mKStarSide   = aPair.GetKStarSide();
+  mKStarLong   = aPair.GetKStarLong();
+  mKStarSigned = aPair.GetKStarSigned();
+  mRSS         = aPair.GetRSide();
+  mROS         = aPair.GetROut();
+  mRLS         = aPair.GetRLong();
+  mRSt         = aPair.GetRStar();
 }
 
 StandAloneSimpleFsi::~StandAloneSimpleFsi() {
