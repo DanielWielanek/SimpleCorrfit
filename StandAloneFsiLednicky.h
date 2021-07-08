@@ -101,21 +101,21 @@ public:
   ~StandAloneFsiLednicky() {};
 
   // --- Function to be called in the correlation function
-  virtual double getWeight(Pair& aPair);
+  double getWeight(Pair& aPair);
 
   // --- Setting
   // >>> Set the type pair
-  virtual void setPipPip();
-  virtual void setPimPim();
-  virtual void setPipPim();
-  virtual void setKpKp();
-  virtual void setKmKm();
-  virtual void setKpKm();
-  virtual void setProtonProton();
-  virtual void setPipProton();
-  virtual void setPimProton();
+  void setPipPip();
+  void setPimPim();
+  void setPipPim();
+  void setKpKp();
+  void setKmKm();
+  void setKpKm();
+  void setProtonProton();
+  void setPipProton();
+  void setPimProton();
   // >>> For other pairs, use the function below
-  virtual void setPairType(const int aPairType);
+  void setPairType(const int aPairType);
   // >>> The pair type can be chosen according to the following numbering
   // aPairType: 1  2  3  4    5   6   7   8  9 10  11  12  13  14 15 16 17
   //   part. 1: n  p  n  alfa pi+ pi0 pi+ n  p pi+ pi+ pi+ pi- K+ K+ K+ K-
@@ -124,20 +124,20 @@ public:
   //   part. 1: d  d    t   t    K0  K0  d  p  p
   //   part. 2: d  alfa t   alfa K0  K0b t  t  alfa
   // >>> Calculation mode
-  virtual void setDefaultCalcPar();  // Default is CoulOn, QuantumOn, StrongOn, 3BodyOff
-  virtual void setCoulOn();
-  virtual void setCoulOff();
+  void setDefaultCalcPar();  // Default is CoulOn, QuantumOn, StrongOn, 3BodyOff
+  void setCoulOn();
+  void setCoulOff();
   void setSphere();
   void setSquare();
-  virtual void setQuantumOn();
-  virtual void setQuantumOff();
-  virtual void setStrongOn();
-  virtual void setStrongOff();
-  virtual void set3BodyOn();
-  virtual void set3BodyOff();
+  void setQuantumOn();
+  void setQuantumOff();
+  void setStrongOn();
+  void setStrongOff();
+  void set3BodyOn();
+  void set3BodyOff();
   void setNuclCharge(const double aNuclCharge);
   void setNuclMass(const double aNuclMass);
-  virtual int getPairType();
+  int getPairType();
   static void ReadParameters() {}
   static void GenerateParameterStub() {}
 

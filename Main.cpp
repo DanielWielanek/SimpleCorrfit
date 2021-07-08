@@ -18,12 +18,8 @@ using namespace std;
 const double gFmToGeVToFm = 5.067731036;
 const double gFmToGeV     = 0.197326968;
 
-struct Lorentz {
-  double_t x, y, z, t;
-};
-
-Lorentz GetMom(double mass) {
-  Lorentz l;
+FourVector GetMom(double mass) {
+  FourVector l;
   l.x      = gRandom->Gaus(0, 0.1);
   l.y      = gRandom->Gaus(0, 0.1);
   l.z      = gRandom->Gaus(0, 0.1);
@@ -131,8 +127,8 @@ int main(int argc, char** argv) {
       cout << i / 1000 << " of " << kPairs << endl;
       ;
     }
-    Lorentz p1         = GetMom(0.139);
-    Lorentz p2         = GetMom(0.493);
+    FourVector p1      = GetMom(0.139);
+    FourVector p2      = GetMom(0.493);
     pair->mMom.part1.x = p1.x;
     pair->mMom.part1.y = p1.y;
     pair->mMom.part1.z = p1.z;

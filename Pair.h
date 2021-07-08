@@ -16,8 +16,6 @@
 #ifndef ST_HBT_DATA_PAIR_HH
 #define ST_HBT_DATA_PAIR_HH
 
-class TRandom2;
-#include "TRandom2.h"
 #include <iostream>
 #include <math.h>
 
@@ -54,19 +52,17 @@ struct MomResParameters {
 class Pair {
 public:
   Pair();
-  virtual ~Pair();
+  ~Pair();
   Pair& operator=(Pair& aPair);
 
-  virtual void SetMomentum(const float* aVect);
-  virtual void Set(const float* aVect);
+  void SetMomentum(const float* aVect);
+  void Set(const float* aVect);
 
   static void SetMomRes(double aMomResScale, int aPairSystem);
   static double GetMomRes();
 
   void SetPairNum(int aNum);
   int GetPairNum();
-  static void GetSeed(UInt_t& s1, UInt_t& s2);
-  static void SetSeed(UInt_t s1, UInt_t s2);
 
   static int nPar();
 
@@ -117,7 +113,6 @@ public:
 
 private:
   int mBad;
-  static TRandom2* mRand;
 
   static int mRelocateTable[8];
   static int mRelocated;

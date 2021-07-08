@@ -95,22 +95,22 @@ public:
   // int IsResidualPair(int,int,int,int);
   int IsIdentical(int) { return 0; };
   double getKStarSigned() { return mKStarSigned; }
-  virtual void setQuantumOn() {};
-  virtual void setStrongOff() {};
-  virtual void setCoulOn() {};
-  virtual double getWeight(Pair& aPair);
-  virtual void setDefaultCalcPar() {};
-  virtual void setStrongOn() {};
-  virtual void setPairType(int aPairType);
-  virtual void setQuantumOff() {};
-  virtual void set3BodyOn() {};
-  virtual void setCoulOff() {};
-  virtual void set3BodyOff() {};
-  virtual int getPairType();
+  void setQuantumOn() {};
+  void setStrongOff() {};
+  void setCoulOn() {};
+  double getWeight(Pair& aPair);
+  void setDefaultCalcPar() {};
+  void setStrongOn() {};
+  void setPairType(int aPairType);
+  void setQuantumOff() {};
+  void set3BodyOn() {};
+  void setCoulOff() {};
+  void set3BodyOff() {};
+  int getPairType();
   inline double GetRout() const { return mROS * 0.197326968; };
   inline double GetRside() const { return mRSS * 0.197326968; };
   inline double GetRlong() const { return mRLS * 0.197326968; };
-  virtual ~StandAloneSimpleFsi();
+  ~StandAloneSimpleFsi();
 };
 
 

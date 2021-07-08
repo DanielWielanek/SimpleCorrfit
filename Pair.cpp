@@ -13,23 +13,16 @@
  *
  ***************************************************************************/
 #include "Pair.h"
-#include <TRandom2.h>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
 #include <strstream>
 
-#include <TFile.h>
-#include <TH2.h>
-#include <TMath.h>
 
 MomResParameters* Pair::mMomRes1 = 0;
 MomResParameters* Pair::mMomRes2 = 0;
 
 double Pair::mMomResScale = 0.0;
-
-
-TRandom2* Pair::mRand = new TRandom2;
 
 double* Pair::mom1 = (double*) malloc(sizeof(double) * 4);
 double* Pair::mom2 = (double*) malloc(sizeof(double) * 4);
@@ -530,8 +523,3 @@ void Pair::SetPosMomEFirstNotation() {
 void Pair::SetPairNum(int aNum) { mPairNum = aNum; }
 
 int Pair::GetPairNum() { return mPairNum; }
-
-
-void Pair::GetSeed(UInt_t& s1, UInt_t& s2) { s1 = mRand->GetSeed(); }
-
-void Pair::SetSeed(UInt_t s1, UInt_t s2) { mRand->SetSeed(s1); }
