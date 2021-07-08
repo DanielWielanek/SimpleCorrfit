@@ -11,27 +11,15 @@
 
 #include "Pair.h"
 
+
 #define PIPID 211
 #define KPID 321
 #define PPID 2212
-#define SPPID 3222
-#define SZPID 3212
-#define LAPID 3122
-#define XIZERPID 3322
-#define XIMINPID 3312
-#define NEPID 2112
-#define ABSRAP 0.7
-#define ETAABS 0.35
-#define PTMIN 0.12
-#define PTMAX 1.5
-#define TMAX 500
 
 #define COULOMBSTEPS 170
 
 #define KAONMASS 0.493677
 #define PIONMASS 0.13957
-
-#define FOURPI 1.25663706143591725e+01
 
 
 struct _dcomplex {
@@ -50,10 +38,6 @@ class StandAloneSimpleFsi {
   int pairtype;
   int partpid;
   int partpid2;
-
-  int CounterCosPhi;
-  int allCounterCosPhi;
-
 
   // end external variables
 
@@ -84,10 +68,7 @@ class StandAloneSimpleFsi {
 
 public:
   StandAloneSimpleFsi();
-  void SelectPairType() {};
   void InitializeGamow();
-  // int IsResidualPair(int,int,int,int);
-  int IsIdentical(int) { return 0; };
   double getKStarSigned() { return mKStarSigned; }
   double getWeight(Pair& aPair);
   void setPairType(int aPairType);

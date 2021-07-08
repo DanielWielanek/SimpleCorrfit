@@ -180,7 +180,6 @@ void StandAloneSimpleFsi::InitializeGamow() {
   oneoveracsq = 1.0 / (pionac * pionac);
   twopioverac = 2.0 * TMath::Pi() / pionac;
   double tpaoverk;
-
   for (int iter = 0; iter < 2000; iter++) {
     tpaoverk    = twopioverac / (iter * 0.0002 + 0.0001);
     gamov[iter] = tpaoverk * 1.0 / (exp(tpaoverk) - 1);
